@@ -1,15 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // Adjust these imports to match your actual folder structure
-import '../screen_renderer.dart'; 
 import 'components/custom_app_bar.dart';
 import 'components/post_card.dart';
+import 'components/highlight_cards.dart';
+import 'search/search_screen.dart';
 
-class HomeScreen extends ScreenRenderer {
-  const HomeScreen({super.key}) : super(title: 'Home');
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isLoaded = false;
+  int _currentIndex = 0;
+
+  late final List<Widget> _bodies;
+  late final List<PreferredSizeWidget?> _appBars;
+
+  Future<void> _loadCurrentIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _currentIndex = prefs.getInt('currentIndex') ?? 0;
+      _isLoaded = true;
+    });
+  }
+
+  Future<void> _saveCurrentIndex(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('currentIndex', index);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentIndex();
+    _bodies = [
+      // Home body
+      CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const HighlightCards(),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => PostCard(index: index),
+              childCount: 10,
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+      // Search body
+      const SearchScreen(),
+      // Placeholder for Create
+      const Center(child: Text('Create')),
+      // Placeholder for Chat
+      const Center(child: Text('Chat')),
+      // Placeholder for Profile
+      const Center(child: Text('Profile')),
+    ];
+
+    _appBars = [
+      const CustomAppBar(), // Home
+      null, // Search - no app bar
+      null, // Create - no app bar
+      null, // Chat - no app bar
+      null, // Profile - no app bar
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isLoaded) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       // FIX 1: Prevents the screen from resizing/overflowing when keyboard opens
       resizeToAvoidBottomInset: false,
@@ -17,29 +92,17 @@ class HomeScreen extends ScreenRenderer {
       // FIX 2: Allows the content to draw behind the curved nav bar
       extendBody: true,
 
-      appBar: const CustomAppBar(),
-      
-      body: ListView.builder(
-        // FIX 3: Add padding at bottom so the last item is visible above the nav bar
-        padding: const EdgeInsets.only(bottom: 100), 
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return PostCard(index: index);
-        },
-      ),
-      
-      bottomNavigationBar: CurvedBottomNavigation(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 0) return; // Already on Home
+      appBar: _appBars[_currentIndex],
 
-          // Navigation logic
-          final screenNames = ['', 'Discover', 'Create', 'Chat', 'Profile'];
-          if (index > 0 && index < screenNames.length) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Navigating to ${screenNames[index]}')),
-            );
-          }
+      body: _bodies[_currentIndex],
+
+      bottomNavigationBar: CurvedBottomNavigation(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          _saveCurrentIndex(index);
         },
       ),
     );

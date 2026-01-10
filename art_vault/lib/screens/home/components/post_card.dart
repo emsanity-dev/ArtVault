@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final int index;
 
   const PostCard({super.key, required this.index});
 
+  @override
+  PostCardState createState() => PostCardState();
+}
+
+class PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,7 +28,7 @@ class PostCard extends StatelessWidget {
                   radius: 20,
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    'User${index + 1}',
+                    'User${widget.index + 1}',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),
@@ -33,7 +38,7 @@ class PostCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '@artistname$index',
+                        '@artistname${widget.index}',
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                       Text(
@@ -70,7 +75,160 @@ class PostCard extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.chat_bubble_outline),
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => Container(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: Column(
+                          children: [
+                            AppBar(
+                              title: Text('Comments'),
+                              leading: IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                              elevation: 0,
+                            ),
+                            Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                children: [
+                                  ListTile(
+                                    leading: CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                    title: Text('User1'),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Great art!'),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '2h',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 16),
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Like',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Reply',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  ListTile(
+                                    leading: CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                    title: Text('User2'),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Love the colors.'),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '1h',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 16),
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Like',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Reply',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IntrinsicHeight(
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                    SizedBox(width: 8),
+                                    PopupMenuButton<String>(
+                                      icon: Icon(Icons.add),
+                                      onSelected: (value) {},
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: 'image',
+                                          child: Text('Image'),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'gif',
+                                          child: Text('GIF'),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'sticker',
+                                          child: Text('Sticker'),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        maxLines: null,
+                                        decoration: InputDecoration(
+                                          hintText: 'Add a comment...',
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.send),
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

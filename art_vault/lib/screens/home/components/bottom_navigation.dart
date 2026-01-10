@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../search/search_screen.dart';
 
 class BottomNavigation extends StatelessWidget {
   const BottomNavigation({super.key});
@@ -28,10 +29,17 @@ class BottomNavigation extends StatelessWidget {
         // Handle navigation
         if (index == 0) return; // Home - already here
 
-        // Map index to route names
-        final routes = ['', '/discover', '/create', '/favorites', '/profile'];
-        if (index > 0 && index < routes.length) {
-          Navigator.pushNamed(context, routes[index]);
+        switch (index) {
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SearchScreen()),
+            );
+            break;
+          // Add cases for other indices if needed
+          default:
+            // Handle other navigation if required
+            break;
         }
       },
     );
