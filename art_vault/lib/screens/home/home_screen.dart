@@ -6,6 +6,8 @@ import 'components/custom_app_bar.dart';
 import 'components/post_card.dart';
 import 'components/highlight_cards.dart';
 import 'search/search_screen.dart';
+import '../chat/chat_screen.dart';
+import '../profile/profile_content.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,17 +66,17 @@ class _HomeScreenState extends State<HomeScreen> {
       const SearchScreen(),
       // Placeholder for Create
       const Center(child: Text('Create')),
-      // Placeholder for Chat
-      const Center(child: Text('Chat')),
-      // Placeholder for Profile
-      const Center(child: Text('Profile')),
+      // Chat Screen
+      const ChatScreen(),
+      // Profile Screen
+      const ProfileContent(),
     ];
 
     _appBars = [
       const CustomAppBar(), // Home
       null, // Search - no app bar
       null, // Create - no app bar
-      null, // Chat - no app bar
+      null, // Chat - no app bar (ChatScreen handles its own UI)
       null, // Profile - no app bar
     ];
   }
