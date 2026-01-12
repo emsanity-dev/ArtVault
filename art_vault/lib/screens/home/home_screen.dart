@@ -7,7 +7,7 @@ import 'components/post_card.dart';
 import 'components/highlight_cards.dart';
 import 'search/search_screen.dart';
 import '../chat/chat_screen.dart';
-import '../profile/profile_content.dart';
+import '../profile/components/profile_content.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

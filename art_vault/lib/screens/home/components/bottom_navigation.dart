@@ -3,7 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../home_screen.dart';
 import '../search/search_screen.dart';
 import '../../chat/chat_screen.dart';
-import '../../../screens/profile/profile_content.dart';
+import '../../profile/components/profile_content.dart';
 
 class BottomNavigation extends StatelessWidget {
   final int currentIndex;
